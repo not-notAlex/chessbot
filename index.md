@@ -1,6 +1,6 @@
-## Welcome to GitHub Pages
+## Welcome to not_not_Bot
 
-You can use the [editor on GitHub](https://github.com/not-notAlex/chessbot/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+You can view the bot [here](https://www.youtube.com/watch?v=E8ckoTkNvW8)
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
