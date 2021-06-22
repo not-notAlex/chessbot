@@ -27,6 +27,11 @@ Create or sign into a lichess account. Then on the homepage click PLAY WITH A FR
  4. **Push** your work back up to your fork
  5. Submit a **Pull request** so that we can review your changes
 
+### Related Projects
+
+https://github.com/SebLague/Chess-AI
+https://github.com/luweizhang/chess-ai
+
 ### Licensing
 
 Copyright (c) 2021, Alexander Smith
