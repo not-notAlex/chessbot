@@ -1,4 +1,4 @@
-# chessbot
+# not_not_Bot
 https://www.youtube.com/watch?v=E8ckoTkNvW8
 
 
@@ -23,5 +23,4 @@ Create or sign into a lichess account. Then on the homepage click PLAY WITH A FR
 -[Alex Smith]
 
 
-
-	   [Alex Smith]: <https://github.com/not-notAlex>
+[Alex Smith]: <https://github.com/not-notAlex>
