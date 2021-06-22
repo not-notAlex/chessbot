@@ -18,11 +18,11 @@ This project is a simple chess AI that can be played on the lichess.org website
       ```
       If ```1763@holbertonschool.com``` is showing up the program is running successfully
 
-### How to Use
+	### How to Use
       
       Create or sign into a lichess account. Then on the homepage click PLAY WITH A FRIEND. Create the challenge with any time control, but make sure you play as white. Then search for the user not_not_Bot. It should accept the challenge automatically. Make sure to close out any games before submitting new challenges.
 
-### Authors
+	### Authors
 
 	-[Alex Smith]
 
