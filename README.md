@@ -1,2 +1,4 @@
 # chessbot
-<iframe width="560" height="315" src="https://www.youtube.com/embed/E8ckoTkNvW8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+https://www.youtube.com/watch?v=E8ckoTkNvW8
+
+
