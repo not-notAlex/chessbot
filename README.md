@@ -8,10 +8,10 @@ This project is a simple chess AI that can be played on the lichess.org website
 
 Clone the repository and run the chessbot.py file
 
-      ```sh
-      $ git clone https://github.com/not-notAlex/chessbot.git
-      $ ./chessbot.py
-      ```
+```sh
+$ git clone https://github.com/not-notAlex/chessbot.git
+$ ./chessbot.py
+```
 If ```1763@holbertonschool.com``` is showing up the program is running successfully
 
 ### How to Use
