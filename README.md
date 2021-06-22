@@ -1,5 +1,6 @@
 # not_not_Bot
 https://www.youtube.com/watch?v=E8ckoTkNvW8
+![chess board on lichess](simple.png "Board")
 
 
 This project is a simple chess AI that can be played on the lichess.org website
