@@ -5,9 +5,12 @@ from chess import Board
 import math
 import pieceMap
 
-def pieceLocationModifier(b=None):
-    mod = 0
+# Adjusts evaluation of piece positions according hard-coded heat map
+def pieceLocationModifier(board=None):
+    modifier = 0
 
+    # These are arrays representing piece locations on the board
+    # and the value associated with those locations
     pawnMap = [
         0,  0,  0,  0,  0,  0,  0,  0,
 	50, 50, 50, 50, 50, 50, 50, 50,
@@ -63,26 +66,28 @@ def pieceLocationModifier(b=None):
 	-20,-10,-10, -5, -5,-10,-10,-20
     ]
 
-    for p in b.pieces(chess.PAWN, chess.BLACK):
-        mod = mod - pawnMap[p]
-    for p in b.pieces(chess.KNIGHT, chess.BLACK):
-        mod = mod - knightMap[p]
-    for p in b.pieces(chess.BISHOP, chess.BLACK):
-        mod = mod - bishopMap[p]
-    for p in b.pieces(chess.ROOK, chess.BLACK):
-        mod = mod - rookMap[p]
-    for p in b.pieces(chess.QUEEN, chess.BLACK):
-        mod = mod - queenMap[p]
+    # Loop for each piece type and adds their value to the returning modifier
+    for p in board.pieces(chess.PAWN, chess.BLACK):
+        modifier = modifier - pawnMap[p]
+    for p in board.pieces(chess.KNIGHT, chess.BLACK):
+        modifier = modifier - knightMap[p]
+    for p in board.pieces(chess.BISHOP, chess.BLACK):
+        modifier = modifier - bishopMap[p]
+    for p in board.pieces(chess.ROOK, chess.BLACK):
+        modifier = modifier - rookMap[p]
+    for p in board.pieces(chess.QUEEN, chess.BLACK):
+        modifier = modifier - queenMap[p]
 
-    for p in b.pieces(chess.PAWN, chess.WHITE):
-        mod = mod + pawnMap[abs(p - 63)]
-    for p in b.pieces(chess.KNIGHT, chess.WHITE):
-        mod = mod + knightMap[abs(p - 63)]
-    for p in b.pieces(chess.BISHOP, chess.WHITE):
-        mod = mod + bishopMap[abs(p - 63)]
-    for p in b.pieces(chess.ROOK, chess.WHITE):
-        mod = mod + rookMap[abs(p - 63)]
-    for p in b.pieces(chess.QUEEN, chess.WHITE):
-        mod = mod + queenMap[abs(p - 63)]    
+    # The index here is reversed to 'flip' the board around for the opposing color
+    for p in board.pieces(chess.PAWN, chess.WHITE):
+        modifier = modifier + pawnMap[abs(p - 63)]
+    for p in board.pieces(chess.KNIGHT, chess.WHITE):
+        modifier = modifier + knightMap[abs(p - 63)]
+    for p in board.pieces(chess.BISHOP, chess.WHITE):
+        modifier = modifier + bishopMap[abs(p - 63)]
+    for p in board.pieces(chess.ROOK, chess.WHITE):
+        modifier = modifier + rookMap[abs(p - 63)]
+    for p in board.pieces(chess.QUEEN, chess.WHITE):
+        modifier = modifier + queenMap[abs(p - 63)]    
         
-    return mod
+    return modifier
