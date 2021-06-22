@@ -10,7 +10,7 @@ This project is a simple chess AI that can be played on the lichess.org website
 Clone the repository and run the chessbot.py file
 
 ```sh
-$ git clone https://github.com/not-notAlex/chessbot.git
+$ git clone https://github.com/not-notAlex/chessbot
 $ cd chessbot
 $ ./chessbot.py
 ```
