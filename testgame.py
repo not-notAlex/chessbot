@@ -5,101 +5,106 @@ from chess import Board
 import math
 import pieceMap
 
-board = chess.Board()
-board2 = chess.Board("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2")
+localBoard = chess.Board()
+testBoard = chess.Board("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2")
 
-def boardValue(b=None):
-    eva = 0
+# Evaluates a board position and returns inetger
+def boardValue(board=None):
+
+    evaluation = 0
     whitePieces = 0
     blackPieces = 0
-    if b.is_checkmate():
-        if b.turn == chess.WHITE:
+
+    # Evaluate checkmate
+    if board.is_checkmate():
+        if board.turn == chess.WHITE:
             return -1000000
         else:
             return 1000000
-    
-    for c in b.board_fen():
+
+    # Count piece material
+    for c in board.board_fen():
         if c == "p":
-            eva -= 100
+            evaluation -= 100
             blackPieces += 1
         if c == "n" or c == "b":
-            eva -= 300
+            evaluation -= 300
             blackPieces += 1
         if c == "r":
-            eva -= 500
+            evaluation -= 500
             blackPieces += 1
         if c == "q":
-            eva -= 900
+            evaluation -= 900
             blackPieces += 1
         if c == "P":
-            eva += 100
+            evaluation += 100
             whitePieces += 1
         if c == "N" or c == "B":
-            eva += 300
+            evaluation += 300
             whitePieces += 1
         if c == "R":
-            eva += 500
+            evaluation += 500
             whitePieces += 1
         if c == "Q":
-            eva += 900
+            evaluation += 900
             whitePieces += 1
 
+    # During endgame scenarios evaluate king positions
     if whitePieces < 6 or blackPieces < 6:
-        whiteKing = int(str(b.king(chess.WHITE)))
-        blackKing = int(str(b.king(chess.BLACK)))
-        wkr = int(whiteKing / 8)
-        wkf = int(whiteKing % 8)
-        bkr = int(blackKing / 8)
-        bkf = int(blackKing % 8)
-        wdfc = max(3 - wkr, wkr - 4)
-        wdfc += max(3 - wkf, wkf - 4)
-        bdfc = max(3 - bkr, bkr - 4)
-        bdfc += max(3 - bkf, bkf - 4)
-        dbkf = abs(wkf - bkf)
-        dbkr = abs(wkr - bkr)
-        if eva > 0:
-            eva += 14 - (dbkr + dbkf)
-            eva += bdfc * 5
+        whiteKing = int(str(board.king(chess.WHITE)))
+        blackKing = int(str(board.king(chess.BLACK)))
+        whiteKingRank = int(whiteKing / 8)
+        whiteKingFile = int(whiteKing % 8)
+        blackKingRank = int(blackKing / 8)
+        blackKingFile = int(blackKing % 8)
+        whiteDistanceFromCenter = max(3 - whiteKingRank, whiteKingRank - 4)
+        whiteDistanceFromCenter += max(3 - whiteKingFile, whiteKingFile - 4)
+        blackDistanceFromCenter = max(3 - blackKingRank, blackKingRank - 4)
+        blackDistanceFromCenter += max(3 - blackKingFile, blackKingFile - 4)
+        distanceBetweenKingFile = abs(whiteKingFile - blackKingFile)
+        distanceBetweenKingRank = abs(whiteKingRank - blackKingRank)
+        if evaluation > 0:
+            evaluation += 14 - (distanceBetweenKingRank + distanceBetweenKingFile)
+            evaluation += blackDistanceFromCenter * 5
         else:
-            eva -= 14 - (dbkr + dbkf)
-            eva -= wdfc * 5
+            evaluation -= 14 - (distanceBetweenKingRank + distanceBetweenKingFile)
+            evaluation -= whiteDistanceFromCenter * 5
 
-    eva += pieceMap.pieceLocationModifier(b)
+    # Piece location heatmap
+    evaluation += pieceMap.pieceLocationModifier(board)
             
-    return(eva)
+    return(evaluation)
 
-def moveSearch(b=None, depth=0, alpha=0, beta=0):
+# Searches for recommended move up to a given depth
+def moveSearch(board=None, depth=0, alpha=0, beta=0):
     if depth == 0:
-        return boardValue(b)
-        #capMoves = moveSearchCaptures(b, alpha, beta)
-        #bv = boardValue(b)
-        #if capMoves > bv and b.turn == chess.WHITE:
-        #    return capMoves
-        #elif capMoves < bv and b.turn == chess.BLACK:
-        #    return capMoves
-        #else:
-        #    return bv
-    if b.turn == chess.WHITE:
+        return boardValue(board)
+
+    # Alpha-Beta Pruning
+    if board.turn == chess.WHITE:
         value = -math.inf
-        for m in getOrderMoves(b):
-            b.push_san(str(m))
-            value = max(value, moveSearch(b, depth - 1, alpha, beta))
-            b.pop()
+        for m in getOrderMoves(board):
+            board.push_san(str(m))
+            value = max(value, moveSearch(board, depth - 1, alpha, beta))
+            board.pop()
+            # Prune unnecessary branch
             if value >= beta:
                 break
             alpha = max(alpha, value)
         return value
     else:
         value = math.inf
-        for m in getOrderMoves(b):
-            b.push_san(str(m))
-            value = min(value, moveSearch(b, depth - 1, alpha, beta))
-            b.pop()
+        for m in getOrderMoves(board):
+            board.push_san(str(m))
+            value = min(value, moveSearch(board, depth - 1, alpha, beta))
+            board.pop()
+            # Prune unnecessary branch
             if value <= alpha:
                 break
             beta = min(beta, value)
         return value
 
+# Unused function created for testing future feature
 def moveSearchCaptures(b=None, alpha=0, beta=0):
     capMoves = []
     for m in getOrderMoves(b):
@@ -128,47 +133,59 @@ def moveSearchCaptures(b=None, alpha=0, beta=0):
                 break
             beta = min(beta, value)
         return value
-    
-def regMoveSearch(b=None, depth=0):
+
+# Unused function for regular minimax algorithm
+# Used for testing alpha-beta pruning having same result
+def regMoveSearch(board=None, depth=0):
     if depth == 0:
-        return boardValue(b)
+        return boardValue(board)
 
     eva = -math.inf
-    if b.turn == chess.BLACK:
+    if board.turn == chess.BLACK:
         eva = eva * -1
 
-    for m in b.legal_moves:
-        b.push_san(str(m))
-        ev = regMoveSearch(b, depth - 1)
-        if b.turn == chess.BLACK:
+    for m in board.legal_moves:
+        board.push_san(str(m))
+        ev = regMoveSearch(board, depth - 1)
+        if board.turn == chess.BLACK:
             eva = max(eva, ev)
         else:
             eva = min(eva, ev)
-        b.pop()
+        board.pop()
 
     return eva
-    
-def getOrderMoves(b=None):
+
+# Returns list of legal moves in a predicted order
+def getOrderMoves(board=None):
     result = []
-    for m in b.legal_moves:
+    
+    for m in board.legal_moves:
         result.append(m)
-    board.set_fen(b.fen())
+        
+    # Copy position from argument to global variable to use in weightMoves function
+    localBoard.set_fen(board.fen())
+    
     return sorted(result, key=weightMoves)
 
+# Function that assigns weight to a particular move
 def weightMoves(m=None):
     weight = 0
 
-    from_square = str(board.piece_at(m.from_square)).lower()
-    to_square = str(board.piece_at(m.to_square)).lower()
-    
-    if board.is_capture(m):
+    from_square = str(localBoard.piece_at(m.from_square)).lower()
+    to_square = str(localBoard.piece_at(m.to_square)).lower()
+
+    # Weight move in terms of valuable capture
+    if localBoard.is_capture(m):
         weight -= 10 * pieceValue(to_square) - pieceValue(from_square)
+    # Increase weight of pawn promotion
     if len(str(m)) > 4:
         weight -= 100
-    if board.gives_check(m):
+    # Slightly increase weight of checks
+    if localBoard.gives_check(m):
         weight -= 5
     return weight
 
+# Simple function to convert string of piece to integer value
 def pieceValue(p=""):
     if p == "p":
         return 1
@@ -185,39 +202,45 @@ def pieceValue(p=""):
     if p == "none":
         return 1
 
-def getMove(b=None):
-    board = b.copy()
+# Prime function that takes a board state as argument and returns reccomended move
+def getMove(board=None):
     depth = 0
     totalPieces = 0
-    highIdx = str(getOrderMoves(b)[0])
-    lowIdx = str(getOrderMoves(b)[0])
+    highIdx = str(getOrderMoves(board)[0])
+    lowIdx = str(getOrderMoves(board)[0])
     lowEva = math.inf
     highEva = -math.inf
-    for p in b.board_fen():
+    
+    for p in board.board_fen():
         if p in "pPnNbBrRqQkK":
             totalPieces += 1
+            
+    # Adjust depth to number of pieces on the board
     if totalPieces > 20:
         depth = 2
     else:
         depth = 3
-    for m in getOrderMoves(b):
-        b.push_san(str(m))
-        move = moveSearch(b, depth, highEva, lowEva)
+
+    # Loop through legal moves and perform alpha-beta pruning
+    for m in getOrderMoves(board):
+        board.push_san(str(m))
+        move = moveSearch(board, depth, highEva, lowEva)
+        # Print evaluation of all moves
         print("move: {} | value: {}".format(str(m), move))
-        b.pop()
+        board.pop()
         if move > highEva:
             highEva = move
             highIdx = str(m)
         if move < lowEva:
             lowEva = move
             lowIdx = str(m)
-    if b.turn == chess.WHITE:
+            
+    if board.turn == chess.WHITE:
         print(highIdx)
         return highIdx
     else:
         print(lowIdx)
-        print("???")
         return lowIdx
     
 if __name__ == "__main__":
-    print(boardValue(board2))
+    print(boardValue(testBoard))
