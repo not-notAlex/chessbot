@@ -30,6 +30,7 @@ Create or sign into a lichess account. Then on the homepage click PLAY WITH A FR
 ### Related Projects
 
 https://github.com/SebLague/Chess-AI
+
 https://github.com/luweizhang/chess-ai
 
 ### Licensing
