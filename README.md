@@ -16,7 +16,15 @@ If ```1763@holbertonschool.com``` is showing up the program is running successfu
 
 ### How to Use
       
-Create or sign into a lichess account. Then on the homepage click PLAY WITH A FRIEND. Create the challenge with any time control, but make sure you play as white. Then search for the user not_not_Bot. It should accept the challenge automatically. Make sure to close out any games before submitting new challenges.
+Create or sign into a lichess account. Then on the homepage click PLAY WITH A FRIEND. Create the challenge with any time control, but make sure you play as white. Then search for the user not_not_Bot. It should accept the challenge automatically. Make sure to close out any games before submitting new challenges. View the above youtube link for an example of how to do this.
+
+### Contributing
+
+ 1. **Fork** the repo on GitHub
+ 2. **Clone** the project to your own machine
+ 3. **Commit** changes to your own branch
+ 4. **Push** your work back up to your fork
+ 5. Submit a **Pull request** so that we can review your changes
 
 ### Authors
 
