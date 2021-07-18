@@ -91,3 +91,24 @@ def pieceLocationModifier(board=None):
         modifier = modifier + queenMap[abs(p - 63)]    
         
     return modifier
+
+def kingLocationModifier(board=None):
+    kingMap = [
+        -30,-40,-40,-50,-50,-40,-40,-30,
+	-30,-40,-40,-50,-50,-40,-40,-30,
+	-30,-40,-40,-50,-50,-40,-40,-30,
+	-30,-40,-40,-50,-50,-40,-40,-30,
+	-20,-30,-30,-40,-40,-30,-30,-20,
+	-10,-20,-20,-20,-20,-20,-20,-10,
+	20, 20,  0,  0,  0,  0, 20, 20,
+	20, 30, 10,  0,  0, 10, 30, 20
+    ]
+
+    modifier = 0
+
+    for p in board.pieces(chess.KING, chess.BLACK):
+        modifier = modifier - kingMap[p]
+    for p in board.pieces(chess.KING, chess.WHITE):
+        modifier = modifier + kingMap[abs(p - 63)]
+
+    return modifier

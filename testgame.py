@@ -6,7 +6,8 @@ import math
 import pieceMap
 
 localBoard = chess.Board()
-testBoard = chess.Board("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2")
+testBoard = chess.Board("r3k1nr/1pp2ppp/p1p3q1/2b1p1B1/4P3/2NP1N1P/PPP2P1P/R2Q1RK1 b kq - 0 9")
+bestMove = ""
 
 # Evaluates a board position and returns inetger
 def boardValue(board=None):
@@ -69,6 +70,8 @@ def boardValue(board=None):
         else:
             evaluation -= 14 - (distanceBetweenKingRank + distanceBetweenKingFile)
             evaluation -= whiteDistanceFromCenter * 5
+    else:
+        evaluation += pieceMap.kingLocationModifier(board)
 
     # Piece location heatmap
     evaluation += pieceMap.pieceLocationModifier(board)
@@ -80,14 +83,19 @@ def moveSearch(board=None, depth=0, alpha=0, beta=0):
     if depth == 0:
         return boardValue(board)
 
+    global bestMove
     # Alpha-Beta Pruning
     if board.turn == chess.WHITE:
         value = -math.inf
         for m in getOrderMoves(board):
             board.push_san(str(m))
-            value = max(value, moveSearch(board, depth - 1, alpha, beta))
+            #value = max(value, moveSearch(board, depth - 1, alpha, beta))
+            temp = moveSearch(board, depth - 1, alpha, beta)
+            if temp > value:
+                value = temp
+                if depth == 4:
+                    bestMove = str(m)
             board.pop()
-            # Prune unnecessary branch
             if value >= beta:
                 break
             alpha = max(alpha, value)
@@ -96,9 +104,13 @@ def moveSearch(board=None, depth=0, alpha=0, beta=0):
         value = math.inf
         for m in getOrderMoves(board):
             board.push_san(str(m))
-            value = min(value, moveSearch(board, depth - 1, alpha, beta))
+            #value = min(value, moveSearch(board, depth - 1, alpha, beta))
+            temp = moveSearch(board, depth - 1, alpha, beta)
+            if temp < value:
+                value = temp
+                if depth == 4:
+                    bestMove = str(m)
             board.pop()
-            # Prune unnecessary branch
             if value <= alpha:
                 break
             beta = min(beta, value)
@@ -144,7 +156,7 @@ def regMoveSearch(board=None, depth=0):
     if board.turn == chess.BLACK:
         eva = eva * -1
 
-    for m in board.legal_moves:
+    for m in getOrderMoves(board):
         board.push_san(str(m))
         ev = regMoveSearch(board, depth - 1)
         if board.turn == chess.BLACK:
@@ -217,14 +229,14 @@ def getMove(board=None):
             
     # Adjust depth to number of pieces on the board
     if totalPieces > 20:
-        depth = 2
+        depth = 3
     else:
         depth = 3
 
     # Loop through legal moves and perform alpha-beta pruning
     for m in getOrderMoves(board):
         board.push_san(str(m))
-        move = moveSearch(board, depth, highEva, lowEva)
+        move = moveSearch(board, depth, -math.inf, math.inf)
         # Print evaluation of all moves
         print("move: {} | value: {}".format(str(m), move))
         board.pop()
@@ -236,11 +248,23 @@ def getMove(board=None):
             lowIdx = str(m)
             
     if board.turn == chess.WHITE:
-        print(highIdx)
+        #print(highIdx)
         return highIdx
     else:
-        print(lowIdx)
+        #print(lowIdx)
         return lowIdx
+
+def getMove2(board=None):
+    moveSearch(board, 4, -math.inf, math.inf)
+    print(bestMove)
+    return bestMove
     
 if __name__ == "__main__":
-    print(boardValue(testBoard))
+    import time
+    t0 = time.time()
+    print(getMove(testBoard))
+    t1 = time.time()
+    print(moveSearch(testBoard, 4, -math.inf, math.inf))
+    t2 = time.time()
+    print(t1 - t0)
+    print(t2 - t1)

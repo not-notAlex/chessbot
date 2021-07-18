@@ -36,7 +36,7 @@ class Game(threading.Thread):
             
         if board.turn == chess.BLACK:
             print("Generating move...")
-            client.bots.make_move(self.game_id, testgame.getMove(board))
+            client.bots.make_move(self.game_id, testgame.getMove2(board))
 
     # Says one simple message in response to chat
     def handle_chat_line(self, chat_line):
